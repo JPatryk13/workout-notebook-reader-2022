@@ -99,7 +99,30 @@ class ReadFile:
     """
 
     def __init__(self, filename: str) -> None:
-        pass
+        with open(filename, 'r') as f:
+            self.workout_diary_content = f.readlines()
 
     def split_content(self) -> list:
-        pass
+        workout_diary_list = []
+        single_workout = []
+
+        for i, line in enumerate(self.workout_diary_content):
+            line = line.strip('\n')
+            if single_workout:
+                if not (line == '' or is_date(line)):
+                    # append the line if it's not an empty space or date
+                    single_workout.append(line)
+                if is_date(line) or line == '' or i == len(self.workout_diary_content) - 1:
+                    # save previous workout day (if there is any) if the line is one of the following:
+                    # 1. date
+                    # 2. empty line
+                    # 3. last line of the file
+                    workout_diary_list.append(single_workout)
+                    single_workout = []
+            elif not single_workout and is_date(line):
+                # start a new workout day if the line is date
+                single_workout = [line]
+            else:
+                continue
+
+        return workout_diary_list
