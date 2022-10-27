@@ -1,5 +1,6 @@
 import re
 from datetime import datetime
+import pprint as pp
 
 
 def is_valid_year(year: str) -> bool:
@@ -107,7 +108,7 @@ class ReadFile:
         single_workout = []
 
         for i, line in enumerate(self.workout_diary_content):
-            line = line.strip('\n')
+            line = line.strip('\n').rstrip(' ')
             if single_workout:
                 if not (line == '' or is_date(line)):
                     # append the line if it's not an empty space or date
@@ -126,3 +127,7 @@ class ReadFile:
                 continue
 
         return workout_diary_list
+
+
+if __name__ == "__main__":
+    pp.pprint(ReadFile("input/initial_21102022.txt").split_content())
