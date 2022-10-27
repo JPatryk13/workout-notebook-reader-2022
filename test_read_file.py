@@ -59,3 +59,6 @@ class TestReadFile(unittest.TestCase):
         actual = ReadFile("input/test_input/just_redundant_content.txt").split_content()
         self.assertEqual(expected, actual)
 
+
+if __name__ == "__main__":
+    unittest.main()
