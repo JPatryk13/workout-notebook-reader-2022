@@ -9,7 +9,7 @@ class TestReadFile(unittest.TestCase):
 
     def test_is_date_no_date(self) -> None:
         actual = is_date("This/ is not / a date/")
-        self.assertTrue(actual)
+        self.assertFalse(actual)
 
     def test_is_date_date_plus_some_text(self) -> None:
         actual = is_date("Date: 12/06/2014 B")
@@ -17,7 +17,7 @@ class TestReadFile(unittest.TestCase):
 
     def test_is_date_invalid_date(self) -> None:
         actual = is_date("38/07/2014")
-        self.assertTrue(actual)
+        self.assertFalse(actual)
 
     def test_split_content_empty_file(self) -> None:
         expected = []
