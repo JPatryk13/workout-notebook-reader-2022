@@ -108,7 +108,7 @@ class ReadFile:
         single_workout = []
 
         for i, line in enumerate(self.workout_diary_content):
-            line = line.strip('\n').rstrip(' ')
+            line = line.strip('\n ')
             if single_workout:
                 if not (line == '' or is_date(line)):
                     # append the line if it's not an empty space or date
