@@ -21,7 +21,7 @@ class TestReadFile(unittest.TestCase):
 
     def test_split_content_empty_file(self) -> None:
         expected = []
-        actual = ReadFile("input/test_input/empty_file.txt").split_content()
+        actual = ReadFile("../input/test_input/empty_file.txt").split_content()
         self.assertEqual(expected, actual)
 
     def test_split_content_single_workout(self) -> None:
@@ -31,7 +31,7 @@ class TestReadFile(unittest.TestCase):
             "Bench: 70x5+6+12",
             "Sitting low row: 59x5+5+11"
         ]]
-        actual = ReadFile("input/test_input/single_workout.txt").split_content()
+        actual = ReadFile("../input/test_input/single_workout.txt").split_content()
         self.assertEqual(expected, actual)
 
     def test_split_content_workouts_and_redundant_content(self) -> None:
@@ -51,12 +51,12 @@ class TestReadFile(unittest.TestCase):
                 "Biceps curly bar: 7.5+20x5+5+8"
             ]
         ]
-        actual = ReadFile("input/test_input/workouts_and_redundant_content.txt").split_content()
+        actual = ReadFile("../input/test_input/workouts_and_redundant_content.txt").split_content()
         self.assertEqual(expected, actual)
 
     def test_split_content_just_redundant_content(self) -> None:
         expected = []
-        actual = ReadFile("input/test_input/just_redundant_content.txt").split_content()
+        actual = ReadFile("../input/test_input/just_redundant_content.txt").split_content()
         self.assertEqual(expected, actual)
 
 
