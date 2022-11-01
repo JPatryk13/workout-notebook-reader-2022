@@ -1,10 +1,32 @@
 from math import floor
 import re
+from typing import Callable, Optional
 
 
 class SplitSets:
     def __init__(self, sets) -> None:
         self.sets = sets
+
+    def _which_varies(self) -> Optional[Callable]:
+        """
+        Determines which side of the sets string varies. Following cases are considered:
+            1. single 'x', no ','; e.g. "10+20x5+5+8" -> var_reps()
+            2. single 'x', ',' present; e.g. "5x7+10,7+20,7+40,7+50" -> var_weight()
+            3. multiple 'x'; e.g. "5x40,60,70,80,2x90" -> var_both()
+        :return: one of the three functions for splitting sets
+        """
+        if 'x' in self.sets:
+            if self.sets.count('x') > 1:
+                return self.var_both
+            else:
+                if ',' in self.sets.split('x')[1]:
+                    return self.var_weight
+                elif self.sets.split('x')[1] == '':
+                    return None
+                else:
+                    return self.var_reps
+        else:
+            return None
 
     def var_reps(self) -> list[tuple[int, float]]:
         """
@@ -141,13 +163,20 @@ class SplitSets:
 
         return sets_list
 
+    def get_list(self) -> Optional[list]:
+        method = self._which_varies()
+        if method:
+            return method()
+        else:
+            return None
+
 
 if __name__ == "__main__":
     sets_list_1 = ["72x5+5+12", "10+20x5+5+8", "81.6x5+5+8", "72x5+5+12.5", "72x5", "72x", "72"]
     for sets in sets_list_1:
-        split_sets = SplitSets(sets).var_reps()
+        split_sets = SplitSets(sets).get_list()
 
     sets_list_3 = ["8x60+8x70+6x70", "8x60,8x70,6x70", "8x60kg,8x70kg,6x70kg", "5x40,60,70,80+2x90",
                    "5x40,60,70,80,2x90", "8x67.5+8x77.5+6x77.5", "8.5x60+8x70+6.5x70"]
     for sets in sets_list_3:
-        split_sets = SplitSets(sets).var_both()
+        split_sets = SplitSets(sets).get_list()

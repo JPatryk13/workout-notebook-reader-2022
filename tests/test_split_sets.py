@@ -134,5 +134,59 @@ class TestSplitSetsVarBoth(unittest.TestCase):
         self.assertEqual(expected, actual)
 
 
+class TestSplitSetsWhichVaries(unittest.TestCase):
+    def test_var_reps(self) -> None:
+        input_sets_list = [
+            "72x5+5+12",
+            "10+20x5+5+8",
+            "81.6x5+5+8",
+            "72x5+5+12.5",
+            "72x5"
+        ]
+        for input_sets in input_sets_list:
+            obj = SplitSets(input_sets)
+            expected = obj.var_reps
+            actual = obj._which_varies()
+            self.assertEqual(expected, actual)
+
+    def test_var_weight(self) -> None:
+        input_sets_list = [
+            "5x40,60,70,80",
+            "5x7+10,27,47,57",
+            "5x7+10,7+20,7+40,7+50",
+            "5x17.5,27.5,47.5,57.5"
+        ]
+        for input_sets in input_sets_list:
+            obj = SplitSets(input_sets)
+            expected = obj.var_weight
+            actual = obj._which_varies()
+            self.assertEqual(expected, actual)
+
+    def test_var_both(self) -> None:
+        input_sets_list = [
+            "8x60+8x70+6x70",
+            "8x60,8x70,6x70",
+            "8x60kg,8x70kg,6x70kg",
+            "5x40,60,70,80+2x90",
+            "5x40,60,70,80,2x90",
+            "8x67.5+8x77.5+6x77.5",
+            "8.5x60+8x70+6.5x70"
+        ]
+        for input_sets in input_sets_list:
+            obj = SplitSets(input_sets)
+            expected = obj.var_both
+            actual = obj._which_varies()
+            self.assertEqual(expected, actual)
+
+    def test_ambiguous_input(self) -> None:
+        input_sets_list = [
+            "72x",
+            "72"
+        ]
+        for input_sets in input_sets_list:
+            actual = SplitSets(input_sets)._which_varies()
+            self.assertIsNone(actual)
+
+
 if __name__ == "__main__":
     unittest.main()
