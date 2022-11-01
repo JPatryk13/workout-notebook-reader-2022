@@ -2,6 +2,11 @@ import re
 
 
 class ExtractData:
+    """
+    Example use:
+        exercise_name = ExtractData(line).exercise_name()
+        str_reps = ExtractData(line).reps()
+    """
     def __init__(self, line) -> None:
         self.line = line
 
@@ -22,7 +27,7 @@ class ExtractData:
         return exercise_name
 
     def reps(self) -> str:
-        pattern = re.compile(r"\D(\s|(:\s))[(]?\d[\d\s+,)(xX]+")
+        pattern = re.compile(r"\D(\s|(:\s))[(]?\d[\d\s+,.)(xX]+")
         reps = pattern.search(self.line).group().lower()  # lower converts any 'X' to 'x'
 
         # first 2 or 3 characters are redundant. It either non-digit + white-space or non-digit + ':' + white-space.
@@ -38,7 +43,7 @@ class ExtractData:
         # removing it should solve the issue. The loop should break whenever any digit is detected to avoid messing up
         # the string
         for i in range(len(reps) - 1, -1, -1):
-            if re.match(r"[\s+,x]", reps[i]):
+            if re.match(r"[\s+,.x]", reps[i]):
                 reps = reps[:-1]
             else:
                 break
