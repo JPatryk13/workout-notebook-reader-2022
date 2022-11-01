@@ -117,7 +117,7 @@ Deadlift 80x5+5+8
 Lat pulldown 68.3*x5+5+7
 Overhead press 44x5+5+7
 Extras:
-Triceps (cables): 25.3**5+5+9
+Triceps (cables): 25.3**x5+5+9
 Shoulder fly dumbbells (2x12.5)*x5+5+5
 Calves (leg press machine) 118**x10+10+10
 Lat pulldown (biceps undergrip): 66.0**x5+5+9
