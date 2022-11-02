@@ -1,6 +1,6 @@
 from math import floor
 import re
-from typing import Callable, Optional
+from typing import Callable, Optional, Union
 
 
 class SplitSets:
@@ -10,13 +10,23 @@ class SplitSets:
     def _which_varies(self) -> Optional[Callable]:
         """
         Determines which side of the sets string varies. Following cases are considered:
-            1. single 'x', no ','; e.g. "10+20x5+5+8" -> var_reps()
-            2. single 'x', ',' present; e.g. "5x7+10,7+20,7+40,7+50" -> var_weight()
-            3. multiple 'x'; e.g. "5x40,60,70,80,2x90" -> var_both()
+            1.  single 'x', no ','; e.g. "10+20x5+5+8" -> var_reps()
+            2.  single 'x', ',' present; e.g. "5x7+10,7+20,7+40,7+50" -> var_weight()
+            3.  multiple 'x'; e.g. "5x40,60,70,80,2x90" -> var_both()
+            4.  multiple 'x', groups such '2x[0-9]+x[0-9]' are present; convert to '[0-9]+[+][0-9]+x[0-9]' and run
+                through the function again
         :return: one of the three functions for splitting sets
         """
         if 'x' in self.sets:
             if self.sets.count('x') > 1:
+                product_weight_group = re.search(r"2x[\d.]+x\d", self.sets)
+                if product_weight_group:
+                    start, end = product_weight_group.span()
+                    end -= 2  # exclude 'x\d' from the string
+                    weight = self.sets[start:end].split('x')[1]
+                    # swap product with sum
+                    self.sets = re.sub(self.sets[start:end], weight + '+' + weight, self.sets)
+                    return self._which_varies()
                 return self.var_both
             else:
                 if ',' in self.sets.split('x')[1]:
@@ -26,7 +36,12 @@ class SplitSets:
                 else:
                     return self.var_reps
         else:
-            return None
+            if '+' in self.sets:
+                # body-weight exercise with no added weight
+                self.sets = '0.0x' + self.sets
+                return self._which_varies()
+            else:
+                return None
 
     def var_reps(self) -> list[tuple[int, float]]:
         """

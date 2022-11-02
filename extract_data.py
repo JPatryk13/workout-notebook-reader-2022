@@ -10,6 +10,18 @@ class ExtractData:
     def __init__(self, line) -> None:
         self.line = line
 
+    def _replace_multiple_with_single_specials(self, txt: str, *, specials: str = r"[+,.x]") -> str:
+        """
+        Replace multiple special characters with single ones.
+        """
+        group = re.search(specials + r"{2,}", txt)
+        if group:
+            char = group.group()[0]
+            txt = re.sub(r'[' + char + r']{2,}', char, txt)
+            return self._replace_multiple_with_single_specials(txt)
+        else:
+            return txt
+
     def exercise_name(self) -> str:
         """
         Extracts and cleans exercise name from a string. Any non-digit word followed by a space or double colon and a
@@ -27,8 +39,9 @@ class ExtractData:
         return exercise_name
 
     def reps(self) -> str:
-        pattern = re.compile(r"\D(\s|(:\s))[(]?\d[\d\s+,.)(xX]+")
+        pattern = re.compile(r"\D(\s|(:\s))[(]?\d[\d\s*+,.)(xX]+")
         reps = pattern.search(self.line).group().lower()  # lower converts any 'X' to 'x'
+        reps = reps.replace('*', '')  # remove '*'
 
         # first 2 or 3 characters are redundant. It either non-digit + white-space or non-digit + ':' + white-space.
         # Either way removing first two character by slicing and using .strip() will get rid of all of them.
@@ -50,7 +63,7 @@ class ExtractData:
 
         # May happen that there is a meaningless combo of characters ("specials") within the string. That cannot be
         # solved programmatically without loosing information therefore user input is required.
-        pass
+        reps = self._replace_multiple_with_single_specials(reps)
 
         # remove all spaces
         reps = re.sub(' ', '', reps)
