@@ -55,15 +55,19 @@ class GroupExerciseNames:
             else:
                 return option.lower()
 
-    def update_exercise_names(self) -> None:
+    def update_exercise_names(self) -> list:
         """
         Check if exercises provided in the constructor exist as keys or values in the dictionary. if they don't ask user
         to choose either assigning it to the existing exercise as an alias or creating a new one.
-        :return: None
+        :return: list of keys
         """
         all_exercises = [item for sublist in [*self.exercise_names_dict.values()] for item in sublist]
+        added_exercises = []
         for exercise_name in self.exercise_list:
             if exercise_name in all_exercises:
+                for key, value in self.exercise_names_dict:
+                    if exercise_name in value:
+                        added_exercises.append(key)
                 continue
             else:
                 key = self._get_exercise_name(exercise_name)
@@ -71,4 +75,5 @@ class GroupExerciseNames:
                     self.exercise_names_dict[key].append(exercise_name)
                 else:
                     self.exercise_names_dict[key] = [exercise_name]
+        return added_exercises
 
