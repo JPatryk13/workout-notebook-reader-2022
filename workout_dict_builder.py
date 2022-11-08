@@ -81,7 +81,8 @@ class WorkoutDictBuilder:
             self.latest_section_added = self._find_exercise_section(exercise_name)
             self.latest_exercise_added = exercise_name
 
-        self.workout_dict["exercises"][self.latest_section_added][self.latest_exercise_added] += sets_list
+        if sets_list:
+            self.workout_dict["exercises"][self.latest_section_added][self.latest_exercise_added] += sets_list
 
     def save_dict(self, *, filename: Optional[str] = None) -> None:
         path = Path(__file__).resolve().parent / "output" / "workouts"
