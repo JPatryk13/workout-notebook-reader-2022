@@ -2,15 +2,27 @@ import json
 import re
 from pathlib import Path
 from typing import Union
+import os
 
 
 class GroupExerciseNames:
-    def __init__(self, exercise_list: list, *, filename: Union[str, Path] = "input/exercise_names.json") -> None:
-        self.exercise_list = exercise_list
+    def __init__(self, *, filename: Union[str, Path] = "input/exercise_names.json"):
         self.filename = filename
 
-        with open(self.filename, 'r') as f:
-            self.exercise_names_dict = json.load(f)
+        if os.path.exists(filename):
+            with open(self.filename, 'r') as f:
+                self.exercise_names_dict = json.load(f)
+        else:
+            self.exercise_names_dict = {}
+
+    def __del__(self):
+        # remove duplicates
+        for key, alias_list in self.exercise_names_dict.items():
+            self.exercise_names_dict[key] = list(set(alias_list))
+
+        # save file
+        with open(self.filename, 'w') as f:
+            json.dump(self.exercise_names_dict, f)
 
     def _get_exercise_name(self, exercise_name: str) -> str:
         """
@@ -55,25 +67,27 @@ class GroupExerciseNames:
             else:
                 return option.lower()
 
-    def update_exercise_names(self) -> list:
+    def get_alias(self, exercise_name: str) -> str:
         """
-        Check if exercises provided in the constructor exist as keys or values in the dictionary. if they don't ask user
+        Check if exercise provided exists as a key or value in the dictionary. if they don't ask user
         to choose either assigning it to the existing exercise as an alias or creating a new one.
-        :return: list of keys
+        :return: key
         """
-        all_exercises = [item for sublist in [*self.exercise_names_dict.values()] for item in sublist]
-        added_exercises = []
-        for exercise_name in self.exercise_list:
-            if exercise_name in all_exercises:
-                for key, value in self.exercise_names_dict:
-                    if exercise_name in value:
-                        added_exercises.append(key)
-                continue
-            else:
-                key = self._get_exercise_name(exercise_name)
-                if key in [*self.exercise_names_dict.keys()]:
-                    self.exercise_names_dict[key].append(exercise_name)
-                else:
-                    self.exercise_names_dict[key] = [exercise_name]
-        return added_exercises
+
+        exercise_name = exercise_name.lower().strip()
+
+        # check if the exercise name already exists
+        for key, value in self.exercise_names_dict.items():
+            if exercise_name in value or exercise_name == key:
+                return key
+
+        # ask user what to do next and get the name (alias) for the exercise
+        key = self._get_exercise_name(exercise_name)
+
+        if key in [*self.exercise_names_dict.keys()]:
+            self.exercise_names_dict[key].append(exercise_name)
+        else:
+            self.exercise_names_dict[key] = [exercise_name]
+
+        return key
 

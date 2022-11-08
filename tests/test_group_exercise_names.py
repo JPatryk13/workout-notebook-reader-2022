@@ -18,7 +18,7 @@ class TestGroupExerciseNames(unittest.TestCase):
             json.dump(self.data, f)
 
         self.exercise_list = ["deadlift", "sitting row (cables)", "kettle bell not-swing swings"]
-        self.group_names = GroupExerciseNames(self.exercise_list, filename=self.filepath)
+        self.group_names = GroupExerciseNames(filename=self.filepath)
 
     def tearDown(self) -> None:
         os.remove(self.filepath)
@@ -51,7 +51,8 @@ class TestGroupExerciseNames(unittest.TestCase):
         input_mock.side_effect = ["0", "2", "kettlebell front raise"]
 
         with patch('builtins.input', input_mock) as mf:
-            self.group_names.update_exercise_names()
+            for x in self.exercise_list:
+                self.group_names.get_alias(x)
 
         expected = {
             "bench press": ["bench press", "bench"],
