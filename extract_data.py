@@ -39,7 +39,7 @@ class ExtractData:
         return exercise_name
 
     def reps(self) -> str:
-        pattern = re.compile(r"\D(\s|(:\s))[(]?\d[\d\s*+,.)(xX]+")
+        pattern = re.compile(r"\D(\s|(:\s))[(]?\d([\d\s*+,.)(xX]|kg)+")
         reps = pattern.search(self.line).group().lower()  # lower converts any 'X' to 'x'
         reps = reps.replace('*', '')  # remove '*'
 
