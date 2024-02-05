@@ -1,6 +1,6 @@
 from math import floor
 import re
-from typing import Callable, Optional, Union
+from typing import Callable, Optional
 
 
 class SplitSets:

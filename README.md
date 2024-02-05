@@ -1,7 +1,7 @@
 # Workout Notebook Reader
 Small pipeline reading `.txt` files with my workout info, filtering out (inconsistent) notation style and writing data to `.JSON` files for future analysis.
 ## Set-up
-1. Clone repository `$ git clone https://github.com/jpatryk7/workout_notebook_reader.git`.
+1. Clone repository.
 2. Create a new virtual environment in the project directory`$ cd workout_notebook_reader`, `$ python -m venv venv`.
 3. When using IDE configure it to use the newly added virtual environment or activate it from the terminal. Before proceeding make sure that `(venv)` is displayed to the left of a new line.
 4. Install required packages `(venv) $ pip install -r requirements.txt`.
